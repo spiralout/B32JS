@@ -1,0 +1,134 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<style>
+			#output {
+				font-family: monospace;
+				font-weight: bold;
+				white-space: pre;
+				color: #a0a0a0;
+				background-color: black;
+				width: 640px;
+				height: 400px;
+				padding: 10px;
+			}
+		</style>
+		<title>A Toy VM in Javascript</title>
+	</head>
+	<body>
+		<table>
+			<tbody>
+				<tr>
+					<td></td>
+					<td></td>
+					<td>
+						<table>
+							<tbody>
+								<tr>
+									<td>A:</td>
+									<td><div id="register_a"></div></td>
+									<td>B:</td>
+									<td><div id="register_b"></div></td>
+									<td>D:</td>
+									<td><div id="register_d"></div></td>
+									<td>X:</td>
+									<td><div id="register_x"></div></td>
+									<td>Y:</td>
+									<td><div id="register_y"></div></td>
+									<td>CMP:</td>
+									<td><div id="register_cmp"></div></td>
+									<td>IP:</td>
+									<td><div id="register_ip"></div></td>
+									<td>OF:</td>
+									<td><div id="register_of"></div></td>
+									<td>CY:</td>
+									<td><div id="register_cy"></div></td>
+
+								</tr>
+							</tbody>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<textarea id="assembler" rows="26" cols="50">START:
+  LDA #65
+  LDX #$A000
+  LDY #2000
+LOOP:
+  STA ,X
+  INCX
+  INCX
+  DECY
+  CMPY #0
+  JGT #LOOP
+  END START</textarea>
+					</td>
+					<td>
+						<textarea id="bytecode" rows="26" cols="50"></textarea>				
+					</td>
+					<td>
+						<div id="output"></div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<button id="run_assembler">Assemble</button>
+					</td>
+					<td>
+						<button id="run_bytecode">Run</button>
+						<button id="stop_bytecode">Stop</button>
+					</td>
+					<td>
+						Output
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		
+		
+	</body>
+	<script src="http://code.jquery.com/jquery.min.js"></script>
+	<script src="vm.js"></script>
+	<script>
+		$(document).ready(function() {
+			var computer = new B32Computer();
+
+			computer.screen.attach(function(data) {
+				$('#output').html(data.join('<BR>'));
+			});
+
+			computer.processor.attachRegisters(function(registers) {
+				$('#register_a').html(registers['A']);
+				$('#register_b').html(registers['B']);
+				$('#register_d').html(registers['D']);
+				$('#register_x').html(registers['X']);
+				$('#register_y').html(registers['Y']);
+				$('#register_cmp').html(registers['CMP']);
+				$('#register_ip').html(registers['IP']);
+				$('#register_of').html(registers['OF']);
+				$('#register_cy').html(registers['CY']);
+			});
+
+			$('#run_assembler').click(function(event) {
+				var assembler = new Assembler();
+				var bytecode = assembler.assemble($('#assembler').val());
+				$('#bytecode').val(bytecode);
+			});
+
+			$('#run_bytecode').click(function(event) {
+				computer.init();
+
+				if (computer.load($('#bytecode').val())) {
+					computer.run();	
+				} else {
+					alert('Invalid bytecode!');
+				}				
+			});
+
+			$('#stop_bytecode').click(function(event) {
+				computer.stop();
+			});
+		});
+	</script>
+</html>
