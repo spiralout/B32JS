@@ -59,6 +59,15 @@ define(['B32/util'], function(util) {
                     case 'DECX': this.handleDECX(mneumonics, pass); break;
                     case 'DECY': this.handleDECY(mneumonics, pass); break;
                     case 'DECD': this.handleDECD(mneumonics, pass); break;
+                    case 'ROLA': this.handleROLA(mneumonics, pass); break;
+                    case 'ROLB': this.handleROLB(mneumonics, pass); break;
+                    case 'RORA': this.handleRORA(mneumonics, pass); break;
+                    case 'RORB': this.handleRORB(mneumonics, pass); break;
+                    case 'ADCA': this.handleADCA(mneumonics, pass); break;
+                    case 'ADCB': this.handleADCB(mneumonics, pass); break;
+                    case 'ADDA': this.handleADDA(mneumonics, pass); break;
+                    case 'ADDB': this.handleADDB(mneumonics, pass); break;
+                    case 'ADDAB': this.handleADDAB(mneumonics, pass); break;
 
                     default: console.log('Unrecognized instruction ' + mneumonics[0]);
                 }
@@ -313,6 +322,77 @@ define(['B32/util'], function(util) {
         }
     };
 
-    return Assembler;
+    Assembler.prototype.handleROLA = function(mneumonics, pass) {
+        this.bytecode_length += 1;
 
+        if (pass == 2) {
+            this.bytecode += '19';
+        }
+    };
+
+    Assembler.prototype.handleROLB = function(mneumonics, pass) {
+        this.bytecode_length += 1;
+
+        if (pass == 2) {
+            this.bytecode += '1A';
+        }
+    };
+
+    Assembler.prototype.handleRORA = function(mneumonics, pass) {
+        this.bytecode_length += 1;
+
+        if (pass == 2) {
+            this.bytecode += '1B';
+        }
+    };
+
+    Assembler.prototype.handleRORB = function(mneumonics, pass) {
+        this.bytecode_length += 1;
+
+        if (pass == 2) {
+            this.bytecode += '1C';
+        }
+    };
+
+    Assembler.prototype.handleADCA = function(mneumonics, pass) {
+        this.bytecode_length += 1;
+
+        if (pass == 2) {
+            this.bytecode += '1D';
+        }
+    };
+
+    Assembler.prototype.handleADCB = function(mneumonics, pass) {
+        this.bytecode_length += 1;
+
+        if (pass == 2) {
+            this.bytecode += '1E';
+        }
+    };
+
+    Assembler.prototype.handleADDA = function(mneumonics, pass) {
+        this.bytecode_length += 2;
+
+        if (pass == 2) {
+            this.bytecode += '1F' + util.getAsHex(mneumonics[1], 1);
+        }
+    };
+
+    Assembler.prototype.handleADDB = function(mneumonics, pass) {
+        this.bytecode_length += 2;
+
+        if (pass == 2) {
+            this.bytecode += '20' + util.getAsHex(mneumonics[1], 1);
+        }
+    };
+
+    Assembler.prototype.handleADDAB = function(mneumonics, pass) {
+        this.bytecode_length += 1;
+
+        if (pass == 2) {
+            this.bytecode += '21';
+        }
+    };
+
+    return Assembler;
 });

@@ -43,6 +43,4 @@ require(['jquery', 'B32/Assembler', 'B32/B32Computer'], function($, Assembler, B
         var bytecode = assembler.assemble($('#assembler').val());
         $('#bytecode').val(bytecode);
     });
-
-
 });

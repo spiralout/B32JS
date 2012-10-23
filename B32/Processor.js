@@ -55,6 +55,9 @@ define(['B32/util'], function(util) {
         this.registers['D'] = 0;
         this.registers['X'] = 0;
         this.registers['Y'] = 0;
+        this.overflow = 0;
+        this.carry = 0;
+        this.stop = false;        
     };
 
     Processor.prototype.load = function(bytecode) {
@@ -193,6 +196,8 @@ define(['B32/util'], function(util) {
 
 
     Processor.prototype.executeStep = function() {
+        console.debug('Executing: ' + this.readBytesAtIP(1));
+        
         switch (this.readBytesAtIP(1)) {
             case '01': this.handleLDA(); break;
             case '02': this.handleLDX(); break;
@@ -217,6 +222,15 @@ define(['B32/util'], function(util) {
             case '16': this.handleDECX(); break;
             case '17': this.handleDECY(); break;
             case '18': this.handleDECD(); break;
+            case '19': this.handleROLA(); break;
+            case '1A': this.handleROLB(); break;
+            case '1B': this.handleRORA(); break;
+            case '1C': this.handleRORB(); break;
+            case '1D': this.handleADCA(); break;
+            case '1E': this.handleADCB(); break;
+            case '1F': this.handleADDA(); break;
+            case '20': this.handleADDB(); break;
+            case '21': this.handleADDAB(); break;
             case '22': this.handleLDB(); break;
             case '23': this.handleLDY(); break;             
 
@@ -225,6 +239,7 @@ define(['B32/util'], function(util) {
 
             default:
                 console.log('Unknown instruction ' + this.readBytesAtIP(1));
+                this.stop = true;
                 return false;
         }
 
@@ -405,6 +420,113 @@ define(['B32/util'], function(util) {
 
     Processor.prototype.handleDECD = function() {
         this.setReg('D', this.getReg('D') - 1);
+        this.instruction_pointer++;
+    };
+
+    Processor.prototype.handleROLA = function() {
+        var old_carry = this.carry;
+
+        if ((this.getReg('A') & 128) == 128) {
+            this.carry = 1;
+        } else {
+            this.carry = 0;
+        }
+
+        if (old_carry > 0) {
+            this.setReg('A', (this.getReg('A') << 1) | 1);
+        } else {
+            this.setReg('A', this.getReg('A') << 1);
+        }
+
+        this.instruction_pointer++;
+    };
+
+    Processor.prototype.handleROLB = function() {
+        var old_carry = this.carry;
+
+        if ((this.getReg('B') & 128) == 128) {
+            this.carry = 1;
+        } else {
+            this.carry = 0;
+        }
+
+        if (old_carry > 0) {
+            this.setReg('B', (this.getReg('B') << 1) | 1);
+        } else {
+            this.setReg('B', this.getReg('B') << 1);
+        }
+
+        this.instruction_pointer++;
+    };
+
+    Processor.prototype.handleRORA = function() {
+        var old_carry = this.carry;
+
+        if ((this.getReg('A') & 1) == 1) {
+            this.carry = 1;
+        } else {
+            this.carry = 0;
+        }
+
+        if (old_carry > 0) {
+            this.setReg('A', (this.getReg('A') >> 1) | 128);
+        } else {
+            this.setReg('A', this.getReg('A') >> 1);
+        }
+
+        this.instruction_pointer++;
+    };
+
+    Processor.prototype.handleRORB = function() {
+        var old_carry = this.carry;
+
+        if ((this.getReg('B') & 1) == 1) {
+            this.carry = 1;
+        } else {
+            this.carry = 0;
+        }
+
+        if (old_carry > 0) {
+            this.setReg('B', (this.getReg('B') >> 1) | 128);
+        } else {
+            this.setReg('B', this.getReg('B') >> 1);
+        }
+
+        this.instruction_pointer++;
+    };
+
+    Processor.prototype.handleADCA = function() {
+        if (this.carry) {
+            this.setReg('A', this.getReg('A') + 1);
+        }
+
+        this.instruction_pointer++;
+    };
+
+    Processor.prototype.handleADCB = function() {
+        if (this.carry) {
+            this.setReg('B', this.getReg('B') + 1);
+        }
+
+        this.instruction_pointer++;
+    };
+
+    Processor.prototype.handleADDA = function() {
+        this.instruction_pointer++;
+        var value = util.hex2Dec(this.readBytesAtIP(1), 1);
+        this.setReg('A', this.getReg('A') + value);
+        this.instruction_pointer++;
+    };
+
+    Processor.prototype.handleADDB = function() {
+        this.instruction_pointer++;
+        var value = util.hex2Dec(this.readBytesAtIP(1), 1);
+        this.setReg('B', this.getReg('B') + value);
+        this.instruction_pointer++;
+    };
+
+    Processor.prototype.handleADDAB = function() {
+        this.setReg('D', this.getReg('A') + this.getReg('B'));
         this.instruction_pointer++;
     };
 

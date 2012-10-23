@@ -3,7 +3,7 @@ define(function() {
     function getAsHex(value, bytes) {
         // is hex
         if (/^#\$\w+/.test(value)) {
-            return value.substr(2);
+            return zeroFill(value.substr(2), bytes * 2);
         // is decimal
         } else if (/^#\d+/.test(value)) {
             return dec2Hex(parseInt(value.substr(1)), bytes);
