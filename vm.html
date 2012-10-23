@@ -51,18 +51,22 @@
                 </tr>
                 <tr>
                     <td>
-                        <textarea id="assembler" rows="26" cols="50">START:
-  LDA #65
+                        <textarea id="assembler" rows="26" cols="50">Start:
   LDX #$A000
-  LDY #2000
-LOOP:
+  LDY #8
+  LDA #48
+  LDB #$AF
+Loop1:
+  ROLB
+  ADCA
   STA ,X
+  LDA #48
   INCX
   INCX
   DECY
-  CMPY #0
-  JGT #LOOP
-  END START</textarea>
+  CMPY #$00
+  JNE #Loop1
+  END Start</textarea>
                     </td>
                     <td>
                         <textarea id="bytecode" rows="26" cols="50"></textarea>             

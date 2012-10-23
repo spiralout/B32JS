@@ -196,8 +196,6 @@ define(['B32/util'], function(util) {
 
 
     Processor.prototype.executeStep = function() {
-        console.debug('Executing: ' + this.readBytesAtIP(1));
-        
         switch (this.readBytesAtIP(1)) {
             case '01': this.handleLDA(); break;
             case '02': this.handleLDX(); break;
@@ -255,7 +253,7 @@ define(['B32/util'], function(util) {
             setTimeout(function() { that.execute(); }, this.interval);
         } else {
             this.stop = false;
-            console.log('Stopped at IP ' + this.instruction_pointer);
+            console.log('Stopped at IP $' + util.dec2Hex(this.instruction_pointer, 2));
         }
     };
 
