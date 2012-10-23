@@ -16,6 +16,8 @@
         <title>A B32 VM in Javascript</title>
     </head>
     <body>
+        <h2>B32js - A B32 VM in Javascript</h2>
+        <a href="B32_SPEC.html">Read Specification</a>
         <table>
             <tbody>
                 <tr>
@@ -51,11 +53,11 @@
                 </tr>
                 <tr>
                     <td>
-                        <textarea id="assembler" rows="26" cols="50">Start:
+                        <textarea id="assembler" rows="26" cols="40">Start:
   LDX #$A000
   LDY #8
   LDA #48
-  LDB #$AF
+  LDB #$AA
 Loop1:
   ROLB
   ADCA
@@ -69,7 +71,7 @@ Loop1:
   END Start</textarea>
                     </td>
                     <td>
-                        <textarea id="bytecode" rows="26" cols="50"></textarea>             
+                        <textarea id="bytecode" rows="26" cols="40"></textarea>             
                     </td>
                     <td>
                         <div id="output"></div>

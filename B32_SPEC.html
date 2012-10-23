@@ -1,0 +1,85 @@
+<h1>B32js VM Specification</h1>
+
+<h2>General Purpose Registers</h2>
+
+<ul>
+<li>A: 8 bit</li>
+<li>B: 8 bit</li>
+<li>D: 16 bit (A + B)</li>
+<li>X: 16 bit</li>
+<li>Y: 16 bit</li>
+</ul>
+
+<h2>Special Registers</h2>
+
+<ul>
+<li>CMP: Contains the result of the last comparison operation</li>
+<li>OF: Indicates the last register operation overflowed</li>
+<li>CY: Indicates a rotate operation had a carry over</li>
+</ul>
+
+<h2>Values</h2>
+
+<p>All literal values should be prepended with an octothorpe (#). Hex values should begin with a dollar sign ($). Examples:</p>
+
+<ul>
+<li>#65 = 65</li>
+<li>#$41 = 65</li>
+<li>#4096 = 4096</li>
+<li>#$1000 = 4096</li>
+<li>#START = address of the label START:</li>
+<li>#Loop1 = address of the label Loop1:</li>
+</ul>
+
+<h2>Labels</h2>
+
+<p>Labels are alphanumeric strings that start at column 0 and end with a colon (:). Examples:</p>
+
+<ul>
+<li>START:</li>
+<li>Loop1:</li>
+<li>SUB42:</li>
+</ul>
+
+<h2>Instructions</h2>
+
+<p>Instructions must be indented by at least one space and separated by a newline. For instructions that take a parameter, the following convention is used: {byte} indicates a 1 byte parameter, {word} indicates a 2 byte parameter and {label} indicates a label name parameter.</p>
+
+<ul>
+<li><p>LDA {byte}: Load value {byte} into register A</p></li>
+<li><p>LDB {byte}: Load value {byte} into register B</p></li>
+<li><p>LDX {word}: Load value {word} into register X</p></li>
+<li><p>LDY {word}: Load value {word} into register Y </p></li>
+<li><p>STA ,X: Store value in register A at memory location in register X</p></li>
+<li><p>END: Terminate the program</p></li>
+<li><p>CMPA {byte}: Compares value in register A with {byte} and sets CMP register</p></li>
+<li><p>CMPB {byte}: Compares value in register B with {byte} and sets CMP register</p></li>
+<li><p>CMPX {word}: Compares value in register X with {word} and sets CMP register</p></li>
+<li><p>CMPY {word}: Compares value in register Y with {word} and sets CMP register</p></li>
+<li><p>CMPD {word}: Compares value in register D with {word} and sets CMP register</p></li>
+<li><p>JMP {label}: Jump to the address of {label}</p></li>
+<li><p>JEQ {label}: Jump to the address of {label} if the equals bit is set on the CMP register</p></li>
+<li><p>JNE {label}: Jump to the address of {label} if the not equals bit is set on the CMP register</p></li>
+<li><p>JGT {label}: Jump to the address of {label} if the greater than bit is set on the CMP register</p></li>
+<li><p>JLT {label}: Jump to the address of {label} if the less than bit is set on the CMP register</p></li>
+<li><p>INCA: Add one to the value in register A</p></li>
+<li><p>INCB: Add one to the value in register B</p></li>
+<li><p>INCX: Add one to the value in register X</p></li>
+<li><p>INCY: Add one to the value in register Y</p></li>
+<li><p>INCD: Add one to the value in register D</p></li>
+<li><p>DECA: Subtract one from the value in register A</p></li>
+<li><p>DECB: Subtract one from the value in register B</p></li>
+<li><p>DECX: Subtract one from the value in register X</p></li>
+<li><p>DECY: Subtract one from the value in register Y</p></li>
+<li><p>DECD: Subtract one from the value in register D</p></li>
+<li><p>ROLA: Rotate the value in register A to the left</p></li>
+<li><p>ROLB: Rotate the value in register B to the left</p></li>
+<li><p>RORA: Rotate the value in register A to the right</p></li>
+<li><p>RORB: Rotate the value in register B to the right</p></li>
+<li><p>ADCA: Add one to the value of register A if the CY register is set </p></li>
+<li><p>ADCB: Add one to the value of register B if the CY register is set </p></li>
+<li><p>ADDA {byte}: Add the value {byte} to register A</p></li>
+<li><p>ADDB {byte}: Add the value {byte} to register B</p></li>
+<li><p>ADDAB: Add the values of registers A and B and store the result in register D (overwriting registers A and B)</p></li>
+</ul>
+
